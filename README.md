@@ -149,6 +149,16 @@ Feel free to submit issues, pull requests, or improvements to this package.
 
 ---
 
+## Contact
+
+For any inquiries or support, feel free to reach out:
+
+- **Email**: mahmod.salah9413@gmail.com  
+- **WhatsApp**: [Chat with me](https://wa.me/+201112115404)  
+- **LinkedIn**: [Mahmod Salah](https://www.linkedin.com/in/mahmod-salah-00213a1a0/)  
+
+---
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

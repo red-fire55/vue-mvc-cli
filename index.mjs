@@ -13,14 +13,12 @@ const __dirname = path.dirname(__filename);
 const program = new Command();
 
 program
-  .version("1.0.0")
+  .version("1.0.3")
   .description("Vue MVC TypeScript File Structure Generator");
 
-program
-  .command("create:project <project-name>")
-  .action((projectName) => {
-    createProject(projectName);
-  });
+program.command("create:project <project-name>").action((projectName) => {
+  createProject(projectName);
+});
 
 program
   .command("create:controller <name>")
@@ -28,27 +26,27 @@ program
   .option("-v, --view", "Create associated view")
   .action((name, options) => {
     if (!name.endsWith("s")) {
-      console.log(chalk.red("❌ Error: Name must end with 's' (e.g., users, cars, etc.)"));
+      console.log(
+        chalk.red("❌ Error: Name must end with 's' (e.g., users, cars, etc.)")
+      );
       process.exit(1);
     }
     createController(name, options.model, options.view);
   });
 
-program
-  .command("create:view <name>")
-  .action((name) => {
-    createView(name);
-  });
+program.command("create:view <name>").action((name) => {
+  createView(name);
+});
 
-program
-  .command("create:model <name>")
-  .action((name) => {
-    if (!name.endsWith("s")) {
-      console.log(chalk.red("❌ Error: Name must end with 's' (e.g., users, cars, etc.)"));
-      process.exit(1);
-    }
-    createModel(name);
-  });
+program.command("create:model <name>").action((name) => {
+  if (!name.endsWith("s")) {
+    console.log(
+      chalk.red("❌ Error: Name must end with 's' (e.g., users, cars, etc.)")
+    );
+    process.exit(1);
+  }
+  createModel(name);
+});
 
 program.parse(process.argv);
 
@@ -60,7 +58,9 @@ function createProject(projectName) {
     process.exit(1);
   }
 
-  console.log(chalk.green(`📂 Creating Vue MVC TypeScript structure in ${projectName}...`));
+  console.log(
+    chalk.green(`📂 Creating Vue MVC TypeScript structure in ${projectName}...`)
+  );
 
   // Directories
   const dirs = [
@@ -70,7 +70,7 @@ function createProject(projectName) {
     "src/components",
     "src/store",
     "src/router",
-    "src/assets"
+    "src/assets",
   ];
 
   dirs.forEach((dir) => fs.ensureDirSync(path.join(projectPath, dir)));
@@ -82,22 +82,25 @@ function createProject(projectName) {
     scripts: {
       start: "vite",
       build: "vite build",
-      serve: "vite preview"
+      serve: "vite preview",
     },
     dependencies: {
       vue: "^3.2.31",
-      "vue-router": "^4.0.0"
+      "vue-router": "^4.0.0",
     },
     devDependencies: {
       typescript: "^4.4.0",
       "@vitejs/plugin-vue": "^1.0.0",
-      vite: "^2.5.0"
+      vite: "^2.5.0",
     },
-    type: "module"
+    type: "module",
   };
 
   // Write package.json
-  fs.writeFileSync(path.join(projectPath, "package.json"), JSON.stringify(packageJson, null, 2));
+  fs.writeFileSync(
+    path.join(projectPath, "package.json"),
+    JSON.stringify(packageJson, null, 2)
+  );
 
   // Default TypeScript files
   const defaultFiles = {
@@ -114,7 +117,7 @@ function createProject(projectName) {
 export async function fetchUsers(): Promise<User[]> {
   const response = await fetch("https://jsonplaceholder.typicode.com/users");
   return response.json();
-}`, 
+}`,
 
     "src/controllers/UserController.ts": `import { ref } from "vue";
 import { fetchUsers, User } from "../models/User";
@@ -170,7 +173,7 @@ app.mount("#app");`,
 
     "src/App.vue": `<template>
   <router-view />
-</template>`
+</template>`,
   };
 
   // Write files
@@ -178,18 +181,28 @@ app.mount("#app");`,
     fs.writeFileSync(path.join(projectPath, file), content);
   }
 
-  console.log(chalk.green("✅ Vue MVC TypeScript structure created successfully!"));
+  console.log(
+    chalk.green("✅ Vue MVC TypeScript structure created successfully!")
+  );
 }
 
 function createController(name, createModelFlag, createViewFlag) {
-  const modelName = name.slice(0, -1); // Remove the 's' from the name for the model and interface
+  const modelName = name.slice(0, -1); // إزالة 's' من الاسم
 
   // Controller content with default methods
   const controllerContent = `import { ref } from "vue";
-import { ${modelName.charAt(0).toUpperCase() + modelName.slice(1)} } from "../models/${modelName.charAt(0).toUpperCase() + modelName.slice(1)}";
+import { ${
+    modelName.charAt(0).toUpperCase() + modelName.slice(1)
+  } } from "../models/${
+    modelName.charAt(0).toUpperCase() + modelName.slice(1)
+  }";
 
-export function use${modelName.charAt(0).toUpperCase() + modelName.slice(1)}Controller() {
-  const ${name} = ref<${modelName.charAt(0).toUpperCase() + modelName.slice(1)}[]>([]);
+export function use${
+    modelName.charAt(0).toUpperCase() + modelName.slice(1)
+  }Controller() {
+  const ${modelName.toLowerCase()}s = ref<${
+    modelName.charAt(0).toUpperCase() + modelName.slice(1)
+  }[]>([]);
 
   const index = async (): Promise<void> => {
     // Implement index logic
@@ -211,26 +224,50 @@ export function use${modelName.charAt(0).toUpperCase() + modelName.slice(1)}Cont
     // Implement show logic
   };
 
-  return { ${name}, index, create, update, deleteItem, show };
+  return { ${modelName.toLowerCase()}s, index, create, update, deleteItem, show };
 }`;
 
-  fs.writeFileSync(path.join(process.cwd(), "src", "controllers", `${name.charAt(0).toUpperCase() + name.slice(1)}Controller.ts`), controllerContent);
+  fs.writeFileSync(
+    path.join(
+      process.cwd(),
+      "src",
+      "controllers",
+      `${modelName.charAt(0).toUpperCase() + modelName.slice(1)}Controller.ts`
+    ),
+    controllerContent
+  );
 
   if (createModelFlag) createModel(name);
   if (createViewFlag) createView(name);
 
   // Add router file for the controller
   const routerContent = `import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import ${name.charAt(0).toUpperCase() + name.slice(1)}View from "../views/${name.charAt(0).toUpperCase() + name.slice(1)}View.vue";
+import ${
+    modelName.charAt(0).toUpperCase() + modelName.slice(1)
+  }View from "../views/${
+    modelName.charAt(0).toUpperCase() + modelName.slice(1)
+  }View.vue";
 
-const routes: RouteRecordRaw[] = [{ path: "/${name}", component: ${name.charAt(0).toUpperCase() + name.slice(1)}View }];
+const routes: RouteRecordRaw[] = [{ path: "/${name}", component: ${
+    modelName.charAt(0).toUpperCase() + modelName.slice(1)
+  }View }];
 
-export const ${name.charAt(0).toUpperCase() + name.slice(1)}Router = createRouter({
+export const ${
+    modelName.charAt(0).toUpperCase() + modelName.slice(1)
+  }Router = createRouter({
   history: createWebHistory(),
   routes,
 });`;
 
-  fs.writeFileSync(path.join(process.cwd(), "src", "router", `${name.charAt(0).toUpperCase() + name.slice(1)}Router.ts`), routerContent);
+  fs.writeFileSync(
+    path.join(
+      process.cwd(),
+      "src",
+      "router",
+      `${modelName.charAt(0).toUpperCase() + modelName.slice(1)}Router.ts`
+    ),
+    routerContent
+  );
 
   // Modify main router to include the new route
   const mainRouterFile = path.join(process.cwd(), "src", "router", "index.ts");
@@ -238,12 +275,17 @@ export const ${name.charAt(0).toUpperCase() + name.slice(1)}Router = createRoute
   mainRouterContent = mainRouterContent.replace(
     /const routes: RouteRecordRaw\[\] = \[.*\];/s,
     (match) => {
-      return match.replace("];", `, { path: "/${name}", component: ${name.charAt(0).toUpperCase() + name.slice(1)}View }];`);
+      return match.replace(
+        "];",
+        `, { path: "/${name}", component: ${
+          modelName.charAt(0).toUpperCase() + modelName.slice(1)
+        }View }];`
+      );
     }
   );
   fs.writeFileSync(mainRouterFile, mainRouterContent);
 
-  console.log(chalk.green(`✅ Controller ${name} created successfully!`));
+  console.log(chalk.green(`✅ Controller ${modelName} created successfully!`));
 }
 
 function createView(name) {
@@ -252,26 +294,60 @@ function createView(name) {
 </template>
 
 <script setup lang="ts">
-import { use${name.charAt(0).toUpperCase() + name.slice(1)}Controller } from "../controllers/${name.charAt(0).toUpperCase() + name.slice(1)}Controller";
+import { use${
+    name.charAt(0).toUpperCase() + name.slice(1)
+  }Controller } from "../controllers/${
+    name.charAt(0).toUpperCase() + name.slice(1)
+  }Controller";
 
-const { ${name} } = use${name.charAt(0).toUpperCase() + name.slice(1)}Controller();
+const { ${name} } = use${
+    name.charAt(0).toUpperCase() + name.slice(1)
+  }Controller();
 </script>`;
 
-  fs.writeFileSync(path.join(process.cwd(), "src/views", `${name.charAt(0).toUpperCase() + name.slice(1)}View.vue`), viewContent);
+  fs.writeFileSync(
+    path.join(
+      process.cwd(),
+      "src/views",
+      `${name.charAt(0).toUpperCase() + name.slice(1)}View.vue`
+    ),
+    viewContent
+  );
 
-  console.log(chalk.green(`✅ View ${name.charAt(0).toUpperCase() + name.slice(1)}View.vue created successfully!`));
+  console.log(
+    chalk.green(
+      `✅ View ${
+        name.charAt(0).toUpperCase() + name.slice(1)
+      }View.vue created successfully!`
+    )
+  );
 }
 
 function createModel(name) {
   const modelName = name.slice(0, -1); // Remove the 's' for the interface
 
-  const modelContent = `export interface ${modelName.charAt(0).toUpperCase() + modelName.slice(1)} {
+  const modelContent = `export interface ${
+    modelName.charAt(0).toUpperCase() + modelName.slice(1)
+  } {
   id: number;
   name: string;
   email: string;
 }`;
 
-  fs.writeFileSync(path.join(process.cwd(), "src/models", `${modelName.charAt(0).toUpperCase() + modelName.slice(1)}.ts`), modelContent);
+  fs.writeFileSync(
+    path.join(
+      process.cwd(),
+      "src/models",
+      `${modelName.charAt(0).toUpperCase() + modelName.slice(1)}.ts`
+    ),
+    modelContent
+  );
 
-  console.log(chalk.green(`✅ Model ${modelName.charAt(0).toUpperCase() + modelName.slice(1)}.ts created successfully!`));
+  console.log(
+    chalk.green(
+      `✅ Model ${
+        modelName.charAt(0).toUpperCase() + modelName.slice(1)
+      }.ts created successfully!`
+    )
+  );
 }
