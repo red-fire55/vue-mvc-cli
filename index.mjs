@@ -174,6 +174,53 @@ app.mount("#app");`,
     "src/App.vue": `<template>
   <router-view />
 </template>`,
+    "index.html": `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Primary Meta Tags -->
+    <title>Vue MVC</title>
+    <meta name="title" content="Vue MVC" />
+    <meta
+      name="description"
+      content="Vue.js 3 TypeScript Boilerplate with mvc architict"
+    />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://metatags.io/" />
+    <meta property="og:title" content="Vue MVC TS Boilerplate" />
+    <meta
+      property="og:description"
+      content="Vue.js 3 TypeScript Boilerplate with mvc architict"
+    />
+    <meta property="og:image" content="https://picsum.photos/id/3/1200/630" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://metatags.io/" />
+    <meta property="twitter:title" content="Vue TS Boilerplate" />
+    <meta
+      property="twitter:description"
+      content="Vue.js 3 TypeScript Boilerplate with mvc architict"
+    />
+    <meta property="twitter:image" content="https://picsum.photos/id/3/1200/630" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>`,
+    "vite.config.ts": `import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+
+export default defineConfig({
+  plugins: [vue()]
+});`,
   };
 
   // Write files
